@@ -1,9 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://dqqy8vxn85q1w"]
+[gd_scene load_steps=10 format=3 uid="uid://dqqy8vxn85q1w"]
 
 [ext_resource type="PackedScene" uid="uid://b1gwqnet1miyk" path="res://scenes/3d/actors/player.tscn" id="1_pxemp"]
+[ext_resource type="Texture2D" uid="uid://byfwevxi1gkc3" path="res://assets/textures/mountain_scene.jpg" id="1_x6s63"]
 [ext_resource type="Texture2D" uid="uid://b7ipflv11mlmu" path="res://assets/textures/glacier_scene.jpg" id="2_kmrjb"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xqv8k"]
+albedo_texture = ExtResource("1_x6s63")
+
 [sub_resource type="BoxMesh" id="BoxMesh_up3o0"]
+material = SubResource("StandardMaterial3D_xqv8k")
 size = Vector3(50, 1, 50)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_5m2pq"]
