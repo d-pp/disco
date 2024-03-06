@@ -1,0 +1,42 @@
+[gd_scene load_steps=8 format=3 uid="uid://dqqy8vxn85q1w"]
+
+[ext_resource type="PackedScene" uid="uid://b1gwqnet1miyk" path="res://scenes/3d/actors/player.tscn" id="1_pxemp"]
+[ext_resource type="Texture2D" uid="uid://b7ipflv11mlmu" path="res://assets/textures/glacier_scene.jpg" id="2_kmrjb"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_up3o0"]
+size = Vector3(50, 1, 50)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_5m2pq"]
+points = PackedVector3Array(-25, -0.5, -25, -25, 0.5, -25, 25, -0.5, -25, -25, -0.5, 25, -25, 0.5, 25, 25, 0.5, -25, 25, -0.5, 25, 25, 0.5, 25)
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_6lw4q"]
+panorama = ExtResource("2_kmrjb")
+
+[sub_resource type="Sky" id="Sky_jfxfm"]
+sky_material = SubResource("PanoramaSkyMaterial_6lw4q")
+process_mode = 1
+
+[sub_resource type="Environment" id="Environment_o8ldh"]
+background_mode = 2
+sky = SubResource("Sky_jfxfm")
+sky_rotation = Vector3(0, 3.14159, 0)
+
+[node name="Sandbox" type="Node3D"]
+
+[node name="Environment" type="StaticBody3D" parent="."]
+
+[node name="FloorM" type="MeshInstance3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+mesh = SubResource("BoxMesh_up3o0")
+
+[node name="FloorC" type="CollisionShape3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("ConvexPolygonShape3D_5m2pq")
+
+[node name="Player" parent="." instance=ExtResource("1_pxemp")]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.697415, 0.550828, -0.458476, -0.403695, 0.830528, 0.383737, 0.59215, -0.0825393, 0.801589, 0, 8.42495, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_o8ldh")

@@ -11,9 +11,17 @@ config_version=5
 [application]
 
 config/name="Disclone"
-run/main_scene="res://scenes/dynamic/sandbox.tscn"
+run/main_scene="res://scenes/logic/game.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
-config/icon="res://assets/icon.svg"
+config/icon="res://assets/textures/icon.svg"
+
+[autoload]
+
+Debug="*res://scripts/global/Debug.gd"
+
+[display]
+
+window/size/mode=3
 
 [input]
 

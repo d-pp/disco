@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://b1gwqnet1miyk"]
+
+[ext_resource type="Script" path="res://scripts/Player.gd" id="1_vfjfv"]
+[ext_resource type="PackedScene" uid="uid://pv4nj6nfcre3" path="res://scenes/3d/actors/children/player_arms.tscn" id="2_lqcxl"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_73tdm"]
+radius = 0.399798
+height = 1.80923
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_vfjfv")
+
+[node name="PlayerCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.56538, 0)
+current = true
+fov = 90.0
+
+[node name="Arms" parent="PlayerCamera" instance=ExtResource("2_lqcxl")]
+
+[node name="Capsule" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.911784, 0)
+shape = SubResource("CapsuleShape3D_73tdm")
