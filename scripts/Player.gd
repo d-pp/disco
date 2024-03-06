@@ -27,6 +27,9 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _physics_process(delta):
+	Debug.print("transform", transform)
+	Debug.print("test", mouse_sens)
+	Debug.print("cumshot", gravity)
 	controls(delta)
 	move_and_slide()
 

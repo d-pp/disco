@@ -14,6 +14,7 @@ func _ready():
 	add_child(level)
 	debug_ui = load(DEBUG_UI).instantiate()
 	add_child(debug_ui)
+	Debug.set_ui(debug_ui)
 	
 
 func _process(_delta):
