@@ -22,9 +22,15 @@ const JUMP_VELOCITY: float = 4.5
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @onready var cam = $PlayerCamera
+@onready var body_view = $BodyContainer/BodyViewport
+@onready var body_cam = $BodyContainer/BodyViewport/BodyCamera
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _process(_delta):
+	body_view.size = get_viewport().size + Vector2i(2,2) # ???
+	body_cam.global_transform = cam.global_transform
 
 func _physics_process(delta):
 	Debug.print("transform", transform)

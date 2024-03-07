@@ -1,8 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://dqqy8vxn85q1w"]
+[gd_scene load_steps=12 format=3 uid="uid://dqqy8vxn85q1w"]
 
 [ext_resource type="PackedScene" uid="uid://b1gwqnet1miyk" path="res://scenes/3d/actors/player.tscn" id="1_pxemp"]
 [ext_resource type="Texture2D" uid="uid://byfwevxi1gkc3" path="res://assets/textures/mountain_scene.jpg" id="1_x6s63"]
 [ext_resource type="Texture2D" uid="uid://b7ipflv11mlmu" path="res://assets/textures/glacier_scene.jpg" id="2_kmrjb"]
+[ext_resource type="PackedScene" uid="uid://b1p0slda385wp" path="res://assets/models/dennis.tscn" id="4_xct7w"]
+[ext_resource type="PackedScene" uid="uid://nlmk6211mlga" path="res://assets/models/chicken_town.tscn" id="5_2kpfi"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xqv8k"]
 albedo_texture = ExtResource("1_x6s63")
@@ -32,11 +34,16 @@ sky_rotation = Vector3(0, 3.14159, 0)
 
 [node name="FloorM" type="MeshInstance3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 mesh = SubResource("BoxMesh_up3o0")
 
 [node name="FloorC" type="CollisionShape3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 shape = SubResource("ConvexPolygonShape3D_5m2pq")
+disabled = true
+
+[node name="ChickenTown" parent="Environment" instance=ExtResource("5_2kpfi")]
 
 [node name="Player" parent="." instance=ExtResource("1_pxemp")]
 
@@ -45,3 +52,15 @@ transform = Transform3D(0.697415, 0.550828, -0.458476, -0.403695, 0.830528, 0.38
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_o8ldh")
+
+[node name="Dennis" parent="." instance=ExtResource("4_xct7w")]
+transform = Transform3D(-0.815512, 0, 0.57874, 0, 1, 0, -0.57874, 0, -0.815512, -1.67447, 0.0431911, 3.83474)
+
+[node name="Dennis2" parent="." instance=ExtResource("4_xct7w")]
+transform = Transform3D(0.811135, 0, 0.584859, 0, 1, 0, -0.584859, 0, 0.811135, -4.75711, -0.0852188, -11.2765)
+
+[node name="Dennis3" parent="." instance=ExtResource("4_xct7w")]
+transform = Transform3D(-0.974983, 0, 0.22228, 0, 1, 0, -0.22228, 0, -0.974983, 9.97922, 0.0832737, 11.1987)
+
+[node name="Dennis4" parent="." instance=ExtResource("4_xct7w")]
+transform = Transform3D(-0.432699, 0, -0.901538, 0, 1, 0, 0.901538, 0, -0.432699, -3.78005, 3.46238, 3.25107)
