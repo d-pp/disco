@@ -3,34 +3,36 @@
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_vfjfv"]
 [ext_resource type="PackedScene" uid="uid://pv4nj6nfcre3" path="res://assets/models/player_arms.tscn" id="2_ufa8s"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_73tdm"]
-radius = 0.29625
-height = 1.68447
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_uxa0e"]
+radius = 0.28
+height = 0.65
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_ey27f"]
-height = 1.6921
-radius = 0.295038
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_73tdm"]
+radius = 0.3
+height = 1.15
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_vfjfv")
 
 [node name="PlayerCamera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.56538, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 cull_mask = 1048573
 current = true
 fov = 90.0
 
 [node name="Arms" parent="PlayerCamera" instance=ExtResource("2_ufa8s")]
-transform = Transform3D(-0.022, 7.29817e-14, -3.31774e-09, -3.64861e-10, 0.0218665, 0.00241988, 3.29762e-09, 0.00241988, -0.0218665, 0, -0.324053, -0.106938)
+transform = Transform3D(-0.028, -2.15937e-12, -4.20223e-09, -4.64369e-10, 0.0278301, 0.00307985, 4.17649e-09, 0.00307985, -0.0278301, 0, -0.42996, -0.106938)
+
+[node name="Head" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Collider" type="CollisionShape3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.17, 0)
+shape = SubResource("CapsuleShape3D_uxa0e")
 
 [node name="Collider" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.843004, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 shape = SubResource("CapsuleShape3D_73tdm")
-disabled = true
-
-[node name="Collider2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.847079, 0)
-shape = SubResource("CylinderShape3D_ey27f")
 
 [node name="BodyContainer" type="SubViewportContainer" parent="."]
 anchors_preset = 15
@@ -51,9 +53,31 @@ fov = 90.0
 
 [node name="Pivot" type="Node3D" parent="."]
 
-[node name="CurbRay" type="RayCast3D" parent="Pivot"]
-transform = Transform3D(1.9, 0, 0, 0, 1.9, 0, 0, 0, 1.9, 0, 1.9, -0.416609)
+[node name="CurbRay1" type="RayCast3D" parent="Pivot"]
+transform = Transform3D(1.15, 0, 0, 0, 1.15, 0, 0, 0, 1.15, 0, 1.15, -0.34)
+enabled = false
+hit_back_faces = false
+
+[node name="CurbRay2" type="RayCast3D" parent="Pivot"]
+transform = Transform3D(1.15, 0, 0, 0, 1.15, 0, 0, 0, 1.15, -0.24, 1.15, -0.3)
+enabled = false
+hit_back_faces = false
+
+[node name="CurbRay3" type="RayCast3D" parent="Pivot"]
+transform = Transform3D(1.15, 0, 0, 0, 1.15, 0, 0, 0, 1.15, 0.24, 1.15, -0.3)
+enabled = false
+hit_back_faces = false
+
+[node name="CurbRay4" type="RayCast3D" parent="Pivot"]
+transform = Transform3D(1.15, 0, 0, 0, 1.15, 0, 0, 0, 1.15, 0.15, 1.15, -0.42)
+enabled = false
+hit_back_faces = false
+
+[node name="CurbRay5" type="RayCast3D" parent="Pivot"]
+transform = Transform3D(1.15, 0, 0, 0, 1.15, 0, 0, 0, 1.15, -0.15, 1.15, -0.42)
+enabled = false
 hit_back_faces = false
 
 [node name="GroundRay" type="RayCast3D" parent="."]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0.01, 0)
+enabled = false

@@ -7,6 +7,9 @@ var ui: Control = null
 const TEXT_HEIGHT: int = 20
 const TEXT_SIZE: int = 50
 
+func _ready():
+	info = {}
+
 # don't look at this if you want to continue having a good day
 func print(label_name: String, value):
 	if not info.has(label_name):
@@ -28,6 +31,19 @@ func print(label_name: String, value):
 	info[label_name + "bg3"].text = "[color=black]" + label_name + " : " + str(value)
 	info[label_name + "bg4"].text = "[color=black]" + label_name + " : " + str(value)
 	info[label_name].text = "[color=greenyellow]" + label_name + " : " + str(value)
+
+func remove(label_name: String):
+	if not info.has(label_name):
+		return
+	for i in range(5):
+		var label: RichTextLabel
+		if i < 4:
+			label = info[label_name + "bg" + str(i+1)]
+			info.erase(label_name + "bg" + str(i+1))
+		else:
+			label = info[label_name]
+			info.erase(label_name)
+		ui.remove_child(label)
 
 func set_ui(debug_ui):
 	self.ui = debug_ui
