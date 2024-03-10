@@ -4,8 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://pv4nj6nfcre3" path="res://assets/models/player_arms.tscn" id="2_ufa8s"]
 [ext_resource type="Script" path="res://scripts/RayGroup.gd" id="3_li3w2"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_5hqse"]
-radius = 0.15
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_boh02"]
+radius = 0.16
+height = 0.36
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_73tdm"]
 radius = 0.3
@@ -21,16 +22,15 @@ current = true
 fov = 90.0
 
 [node name="Arms" parent="PlayerCamera" instance=ExtResource("2_ufa8s")]
-transform = Transform3D(-0.028, -2.15937e-12, -4.20223e-09, -4.64369e-10, 0.0278301, 0.00307985, 4.17649e-09, 0.00307985, -0.0278301, 0, -0.42996, -0.106938)
+transform = Transform3D(-0.028, -2.15937e-12, -4.20223e-09, -4.64369e-10, 0.0278301, 0.00307985, 4.17649e-09, 0.00307985, -0.0278301, 0, -0.4, -0.1)
 
 [node name="Head" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="ShapeCast3D" type="ShapeCast3D" parent="Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.53, 0)
-shape = SubResource("SphereShape3D_5hqse")
-target_position = Vector3(0, 0.53, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.04, 0)
+shape = SubResource("CapsuleShape3D_boh02")
+target_position = Vector3(0, 0.5, 0)
 debug_shape_custom_color = Color(0.933333, 0, 0.635294, 1)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
