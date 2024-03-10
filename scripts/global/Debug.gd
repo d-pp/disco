@@ -10,6 +10,9 @@ const TEXT_SIZE: int = 50
 func _ready():
 	info = {}
 
+func log(label_name: String, value):
+	self.print(label_name, value)
+
 # don't look at this if you want to continue having a good day
 func print(label_name: String, value):
 	if not info.has(label_name):

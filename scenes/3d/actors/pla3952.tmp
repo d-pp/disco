@@ -2,10 +2,11 @@
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_vfjfv"]
 [ext_resource type="PackedScene" uid="uid://pv4nj6nfcre3" path="res://assets/models/player_arms.tscn" id="2_ufa8s"]
-[ext_resource type="Script" path="res://scripts/RayGroup.gd" id="3_li3w2"]
+[ext_resource type="Script" path="res://scenes/3d/actors/RayGroup.gd" id="3_5wury"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_5hqse"]
-radius = 0.15
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_uxa0e"]
+radius = 0.28
+height = 0.65
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_73tdm"]
 radius = 0.3
@@ -15,7 +16,7 @@ height = 1.15
 script = ExtResource("1_vfjfv")
 
 [node name="PlayerCamera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 1.62214)
 cull_mask = 1048573
 current = true
 fov = 90.0
@@ -23,18 +24,15 @@ fov = 90.0
 [node name="Arms" parent="PlayerCamera" instance=ExtResource("2_ufa8s")]
 transform = Transform3D(-0.028, -2.15937e-12, -4.20223e-09, -4.64369e-10, 0.0278301, 0.00307985, 4.17649e-09, 0.00307985, -0.0278301, 0, -0.42996, -0.106938)
 
-[node name="Head" type="Node3D" parent="."]
+[node name="Head" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-visible = false
 
-[node name="ShapeCast3D" type="ShapeCast3D" parent="Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.53, 0)
-shape = SubResource("SphereShape3D_5hqse")
-target_position = Vector3(0, 0.53, 0)
-debug_shape_custom_color = Color(0.933333, 0, 0.635294, 1)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.17, 0)
+shape = SubResource("CapsuleShape3D_uxa0e")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.575, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 shape = SubResource("CapsuleShape3D_73tdm")
 
 [node name="BodyContainer" type="SubViewportContainer" parent="."]
@@ -56,7 +54,7 @@ fov = 90.0
 
 [node name="CurbRays" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
-script = ExtResource("3_li3w2")
+script = ExtResource("3_5wury")
 target_offset = Vector3(0, -1.15, 0)
 
 [node name="CurbRay1" type="RayCast3D" parent="CurbRays"]
@@ -94,31 +92,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0, -0.34)
 enabled = false
 hit_back_faces = false
 
-[node name="GroundRays" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
-script = ExtResource("3_li3w2")
-target_offset = Vector3(0, -5, 0)
-
-[node name="GroundRay1" type="RayCast3D" parent="GroundRays"]
+[node name="GroundRay" type="RayCast3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0.01, 0)
 enabled = false
-hit_back_faces = false
-
-[node name="GroundRay2" type="RayCast3D" parent="GroundRays"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.06, 0, -0.06)
-enabled = false
-hit_back_faces = false
-
-[node name="GroundRay3" type="RayCast3D" parent="GroundRays"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0, -0.06)
-enabled = false
-hit_back_faces = false
-
-[node name="GroundRay4" type="RayCast3D" parent="GroundRays"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.06, 0, 0.06)
-enabled = false
-hit_back_faces = false
-
-[node name="GroundRay5" type="RayCast3D" parent="GroundRays"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0, 0.06)
-enabled = false
-hit_back_faces = false

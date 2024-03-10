@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://dqqy8vxn85q1w"]
+[gd_scene load_steps=17 format=3 uid="uid://dqqy8vxn85q1w"]
 
 [ext_resource type="PackedScene" uid="uid://b1gwqnet1miyk" path="res://scenes/3d/actors/player.tscn" id="1_pxemp"]
 [ext_resource type="Texture2D" uid="uid://byfwevxi1gkc3" path="res://assets/textures/mountain_scene.jpg" id="1_x6s63"]
 [ext_resource type="Texture2D" uid="uid://b7ipflv11mlmu" path="res://assets/textures/glacier_scene.jpg" id="2_kmrjb"]
 [ext_resource type="PackedScene" uid="uid://b1p0slda385wp" path="res://assets/models/dennis.tscn" id="4_xct7w"]
 [ext_resource type="PackedScene" uid="uid://nlmk6211mlga" path="res://assets/models/chicken_town.tscn" id="5_2kpfi"]
+[ext_resource type="Texture2D" uid="uid://lk6gxqdxv7iu" path="res://assets/textures/classics.jpg" id="6_cmox8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xqv8k"]
 albedo_texture = ExtResource("1_x6s63")
@@ -16,7 +17,7 @@ size = Vector3(5, 0.25, 5)
 [sub_resource type="GDScript" id="GDScript_6gmry"]
 script/source = "extends MeshInstance3D
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var x: float = Time.get_ticks_msec()
 	position.x = 10 + 2 * sin(0.004 * x)
 "
@@ -36,6 +37,16 @@ background_mode = 2
 sky = SubResource("Sky_jfxfm")
 sky_rotation = Vector3(0, 3.14159, 0)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vdib0"]
+albedo_texture = ExtResource("6_cmox8")
+uv1_offset = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_bqinm"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_xdnxa"]
+data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
+
 [node name="Sandbox" type="Node3D"]
 
 [node name="platform" type="MeshInstance3D" parent="."]
@@ -50,7 +61,7 @@ script = SubResource("GDScript_6gmry")
 shape = SubResource("ConcavePolygonShape3D_j7buo")
 
 [node name="Player" parent="." instance=ExtResource("1_pxemp")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 13.819, 0.0883163, 19.7615)
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.697415, 0.550828, -0.458476, -0.403695, 0.830528, 0.383737, 0.59215, -0.0825393, 0.801589, 0, 8.42495, 0)
@@ -67,3 +78,21 @@ transform = Transform3D(-0.974983, 0, 0.22228, 0, 1, 0, -0.22228, 0, -0.974983, 
 [node name="ChickenTown" parent="." instance=ExtResource("5_2kpfi")]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.1051, 1.79543, 22.0568)
+material_override = SubResource("StandardMaterial3D_vdib0")
+mesh = SubResource("BoxMesh_bqinm")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_xdnxa")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.1909, 1.47828, 22.1676)
+material_override = SubResource("StandardMaterial3D_vdib0")
+mesh = SubResource("BoxMesh_bqinm")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_xdnxa")

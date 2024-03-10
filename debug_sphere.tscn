@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cbw5bgt6ka2wv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lhtaq"]
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_1i2jf"]
+
+[sub_resource type="GDScript" id="GDScript_40a0t"]
+script/source = "extends MeshInstance3D
+
+func _process(_delta):
+	var mat: StandardMaterial3D = get_active_material(0)
+	mat.emission = Color(0.5+0.4*sin(Time.get_ticks_msec() * 0.005),0,0,1)
+"
+
+[node name="DebugSphere" type="MeshInstance3D"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_lhtaq")
+mesh = SubResource("SphereMesh_1i2jf")
+script = SubResource("GDScript_40a0t")
