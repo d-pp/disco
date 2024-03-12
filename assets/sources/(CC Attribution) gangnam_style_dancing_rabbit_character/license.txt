@@ -1,0 +1,11 @@
+Model Information:
+* title:	Gangnam Style Dancing Rabbit Character
+* source:	https://sketchfab.com/3d-models/gangnam-style-dancing-rabbit-character-a06d60f0ab144adc982cdc94bf24e368
+* author:	antonmoek (https://sketchfab.com/antonmoek)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Gangnam Style Dancing Rabbit Character" (https://sketchfab.com/3d-models/gangnam-style-dancing-rabbit-character-a06d60f0ab144adc982cdc94bf24e368) by antonmoek (https://sketchfab.com/antonmoek) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

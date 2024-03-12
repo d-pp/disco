@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://cwyu5xcleh5g6"]
 
-[ext_resource type="ArrayMesh" uid="uid://dpclcpyds04gf" path="res://assets/models/sexy_amogus.res" id="1_r1jcl"]
+[ext_resource type="ArrayMesh" uid="uid://dpclcpyds04gf" path="res://assets/models/sexy_amogus.res" id="1_lfa10"]
 
 [node name="SexyAmogus" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.970337, -0.0329736, -0.239497, 0.114004, -0.81118, 0.573576, -0.213188, -0.583866, -0.783359, 0, 52.7928, 0)
-mesh = ExtResource("1_r1jcl")
+mesh = ExtResource("1_lfa10")

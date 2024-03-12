@@ -9,7 +9,7 @@ const MOUSE_SENS_MOD: float = 0.005
 @export var mouse_sensitivity: float = 1.0
 var input_dir: Vector3
 # ~+'^'+~ CONSTS ~+'^'+~ #
-const X_Z: Vector3 = Vector3(1,0,1)
+const VECTOR3_XZ: Vector3 = Vector3(1,0,1)
 const LEDGE_HEIGHT: float = 0.55
 const TERMINAL_VELOCITY: float = -60.0
 const COYOTE_TIME: float = 0.2
@@ -25,19 +25,19 @@ var cam_raw_rotation: float = 0.0
 var cam_y_velocity: float = 0.0
 var arms_y_velocity: float = 0.0
 # ~+'^'+~ CRAFTING THE PERFECT JUMP ~+'^'+~ #
-const JUMP_HEIGHT: float = 1.3
-const JUMP_TIME: float = 0.32
-const FALL_TIME: float = 0.32
+const JUMP_HEIGHT: float = 1.35
+const JUMP_TIME: float = 0.30
+const FALL_TIME: float = 0.30
 const JUMP_VELOCITY: float = 2 * JUMP_HEIGHT / JUMP_TIME
 const JUMP_GRAVITY: float = 2 * JUMP_HEIGHT / JUMP_TIME**2
 const FALL_GRAVITY: float = 2 * JUMP_HEIGHT / FALL_TIME**2
 var HANG_TIME: float = 0.08
 var hang_timer: float = HANG_TIME + 1
 
-const HEAD_Y: float = 1.0
+const HEAD_Y: float = 0.969
 const CAM_Y: float = 1.565
-const BASE_MOVE_SPEED: float = 4.2
-const ACCEL: float = 16.0
+@export var base_move_speed: float = 4.1
+@export var acceleration: float = 18.0
 
 var crouched: bool = false
 
@@ -49,12 +49,16 @@ var crouched: bool = false
 @onready var body_cam: Camera3D = $BodyContainer/BodyViewport/BodyCamera
 @onready var curb_rays: RayGroup = $CurbRays
 @onready var ground_rays: RayGroup = $GroundRays
+@onready var standing_col: CollisionShape3D = $StandingColliderShape
+@onready var crouching_col: CollisionShape3D = $CrouchingColliderShape
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	# try to avoid angles between ~60° and ~75°
 	floor_max_angle = deg_to_rad(65.0)
 	floor_snap_length = 0.25
+	crouching_col.disabled = not crouched
+	standing_col.disabled = crouched
 
 func _process(_delta):
 	body_view.size = get_viewport().size + Vector2i(2,2) # doesn't render fully otherwise
@@ -69,42 +73,52 @@ func _physics_process(delta):
 	move_and_slide()
 	# duck
 	head_shape.force_shapecast_update()
-	posture = head_shape.get_closest_collision_safe_fraction()
-	var diff = posture * head_shape.target_position.y
+	var head_offset = head_shape.position.y + head_shape.get_closest_collision_safe_fraction() * head_shape.target_position.y
+	posture = remap(head_offset, 0.8 - 1.15, 0.5, 0.0, 1.0)
+	Debug.log("Posture", posture)
 	position_delta =  position - position_delta
 	# smooth and bouncy camera
 	cam.position.y -= position_delta.y
 	var cam_stiffness: float = 18 if grounded else 25
 	var cam_springyness: float = 140
-	cam_y_velocity += (HEAD_Y + diff - cam.position.y) * delta * cam_springyness
+	cam_y_velocity += (HEAD_Y + head_offset - cam.position.y) * delta * cam_springyness
 	cam_y_velocity = clamp(cam_y_velocity, -30, 20)
+	Debug.log("Cam Vel", cam_y_velocity)
 	cam.position.y += cam_y_velocity * delta
-	cam.position.y = lerp(cam.position.y, HEAD_Y + diff, delta * cam_stiffness)
-	arms.position.y -= cam_y_velocity * delta * 0.35
-	arms.position.y = lerp(arms.position.y, -0.4, delta * cam_stiffness)
+	cam.position.y = lerp(cam.position.y, HEAD_Y + head_offset, delta * cam_stiffness)
+	arms_y_velocity += cam_y_velocity * 0.1
+	arms_y_velocity = lerp(arms_y_velocity, 0.0, 0.28)
+	arms.position.y += arms_y_velocity * delta
+	arms.position.y = lerp(arms.position.y, -0.4, delta * cam_stiffness * 1.2)
 	# head bob
 	if grounded:
-		var speed = (velocity * X_Z).length()**0.6
-		cam.position.y += speed * 0.0013 * sin(Time.get_ticks_msec() * speed * 0.004)
-		arms.position.y += speed * 0.0005 * sin(Time.get_ticks_msec() * speed * 0.004)
+		var speed_mod: float = 0.001 * (velocity * VECTOR3_XZ).length()**0.9
+		Debug.log("Head Bob", speed_mod * 1000)
+		var bob_phase: float = sin(Time.get_ticks_msec() * speed_mod * 2.8)
+		cam.position.y += speed_mod * 1.0 * bob_phase
+		cam.rotation.x += speed_mod * 0.05 * bob_phase
+		arms.position.y += speed_mod * 0.3 * bob_phase
 	
 
 func get_gravity(delta):
 	if velocity.y > 0:
 		hang_timer = 0.0
-		return JUMP_GRAVITY
+		Debug.log("Jump Phase", "JUMP")
+		return -JUMP_GRAVITY
 	elif hang_timer < HANG_TIME:
 		hang_timer += delta
 		velocity.y = 0.0
+		Debug.log("Jump Phase", "HANG")
 		return 0.0
-	return FALL_GRAVITY
+	Debug.log("Jump Phase", "FALL")
+	return -FALL_GRAVITY
 
 func raycast_shit():
 	ground_rays.fire_all()
 	distance_from_ground = -RayGroup.dist(ground_rays.shortest_ray()).y
 	# curb check
-	if (velocity * X_Z).length() > 0.01 and distance_from_ground < 0.6:
-		curb_rays.look_at(curb_rays.global_position + velocity * X_Z)
+	if (velocity * VECTOR3_XZ).length() > 0.01 and distance_from_ground < 0.6:
+		curb_rays.look_at(curb_rays.global_position + velocity * VECTOR3_XZ)
 		curb_rays.fire_all()
 		var short_ray: RayCast3D = curb_rays.shortest_ray()
 		if short_ray != null:
@@ -135,13 +149,22 @@ func controls(delta):
 	if Input.is_action_just_pressed("reload"):
 		position = Vector3.UP * 10
 		velocity = Vector3.ZERO
+	# crouch
 	if Input.is_action_just_pressed("crouch"):
 		crouched = not crouched
-		head_shape.target_position.y = 0.0 if crouched else 0.5
-	# am on ground?
+		if crouched:
+			crouching_col.disabled = false
+			standing_col.disabled = true
+			head_shape.position.y = 0.8 - 1.15
+	# might still be waiting to stand up
+	if not crouched and standing_col.disabled:
+		if move_and_collide(Vector3.UP * (1.15 - 0.8), true) == null:
+			crouching_col.disabled = true
+			standing_col.disabled = false
+			head_shape.position.y = 0.0
+	# coyote -> wants to jump now and had ground a moment ago
+	# reverse coyote -> has ground now and failed to jump a moment ago
 	grounded = is_on_floor()
-	# coyote -> wants to jump and had ground a moment ago
-	# reverse coyote -> has ground and failed to jump a moment ago
 	coyote_timer += delta
 	reverse_coyote_timer += delta
 	if grounded:
@@ -149,6 +172,7 @@ func controls(delta):
 	elif coyote_timer < COYOTE_TIME:
 		grounded = true
 	time_since_last_jump += delta
+	# jump
 	if Input.is_action_just_pressed("move_jump") or\
 	grounded and reverse_coyote_timer < REVERSE_COYOTE_TIME:
 		if grounded:
@@ -156,19 +180,19 @@ func controls(delta):
 			coyote_timer = COYOTE_TIME + 1
 			velocity.y = JUMP_VELOCITY
 			time_since_last_jump = 0
-		else: # pressed space, but not grounded
+		else: # pressed 'jump', but isn't grounded
 			reverse_coyote_timer = 0
 	else:
-		velocity.y -= get_gravity(delta) * delta
+		velocity.y += get_gravity(delta) * delta
 		velocity.y = max(velocity.y, TERMINAL_VELOCITY)
 	# walk
 	var input_xy: Vector2 = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	input_dir = transform.basis * Vector3(input_xy.x, 0, input_xy.y)
-	var accel_mod: float = 0.4 + 0.6 * input_dir.length()
-	if not grounded: # floating
-		accel_mod *= 0.3
-	var posture_mod = posture if grounded else 1.0
+	var accel_mod: float = 0.3 + 0.7 * input_dir.length()
+	if not grounded:
+		accel_mod *= 0.25
+	var posture_mod = posture**2 if grounded else 1.0
 	var sprint_mod = 1.5 if Input.is_action_pressed("sprint") else 1.0
-	var move_speed: float = BASE_MOVE_SPEED * (0.5 + 0.5 * posture_mod) * sprint_mod
+	var move_speed: float = base_move_speed * (0.25 + 0.75 * posture_mod) * sprint_mod
 	var target_vel: Vector3 = velocity * Vector3.UP + input_dir * move_speed
-	velocity = velocity.move_toward(target_vel, delta * ACCEL * accel_mod * move_speed)
+	velocity = velocity.move_toward(target_vel, delta * acceleration * accel_mod * move_speed)
