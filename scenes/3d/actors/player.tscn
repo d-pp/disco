@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b1gwqnet1miyk"]
+[gd_scene load_steps=8 format=3 uid="uid://b1gwqnet1miyk"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_vfjfv"]
 [ext_resource type="PackedScene" uid="uid://pv4nj6nfcre3" path="res://assets/models/player_arms.tscn" id="2_ufa8s"]
@@ -15,6 +15,9 @@ height = 1.15
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5x34g"]
 radius = 0.3
 height = 0.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3rqj2"]
+size = Vector3(0.1, 1.6, 0.1)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_vfjfv")
@@ -62,9 +65,10 @@ cull_mask = 2
 fov = 90.0
 
 [node name="CurbRays" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+visible = false
 script = ExtResource("3_li3w2")
-target_offset = Vector3(0, -1.15, 0)
+target_offset = Vector3(0, -0.8, 0)
 
 [node name="CurbRay1" type="RayCast3D" parent="CurbRays"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.4)
@@ -129,3 +133,25 @@ hit_back_faces = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0, 0.06)
 enabled = false
 hit_back_faces = false
+
+[node name="LedgeRays" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+script = ExtResource("3_li3w2")
+target_offset = Vector3(0, -1.6, 0)
+
+[node name="RayCast3D" type="RayCast3D" parent="LedgeRays"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.32)
+
+[node name="RayCast3D5" type="RayCast3D" parent="LedgeRays"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.38)
+
+[node name="RayCast3D9" type="RayCast3D" parent="LedgeRays"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.44)
+
+[node name="RayCast3D10" type="RayCast3D" parent="LedgeRays"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+
+[node name="LedgeAngleCheck" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+shape = SubResource("BoxShape3D_3rqj2")
+target_position = Vector3(0, 0, -0.5)

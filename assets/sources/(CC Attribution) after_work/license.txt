@@ -1,0 +1,11 @@
+Model Information:
+* title:	After Work
+* source:	https://sketchfab.com/3d-models/after-work-91451a68dfa847fe9a12d10133ab6d22
+* author:	Duhan (https://sketchfab.com/duhan.dorman)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "After Work" (https://sketchfab.com/3d-models/after-work-91451a68dfa847fe9a12d10133ab6d22) by Duhan (https://sketchfab.com/duhan.dorman) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dqqy8vxn85q1w"]
+[gd_scene load_steps=21 format=3 uid="uid://dqqy8vxn85q1w"]
 
 [ext_resource type="PackedScene" uid="uid://djoniyuirgcu7" path="res://scenes/fuck you godot why is it so hard to do this shit.tscn" id="1_08jda"]
 [ext_resource type="PackedScene" uid="uid://b1gwqnet1miyk" path="res://scenes/3d/actors/player.tscn" id="1_pxemp"]
@@ -7,21 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://b1p0slda385wp" path="res://assets/models/dennis.tscn" id="4_xct7w"]
 [ext_resource type="PackedScene" uid="uid://nlmk6211mlga" path="res://assets/models/chicken_town.tscn" id="5_2kpfi"]
 [ext_resource type="Texture2D" uid="uid://lk6gxqdxv7iu" path="res://assets/textures/classics.jpg" id="6_cmox8"]
-[ext_resource type="PackedScene" uid="uid://cwyu5xcleh5g6" path="res://assets/models/sexy_amogus.tscn" id="7_a8qah"]
 [ext_resource type="PackedScene" uid="uid://cyr6k5y031lc1" path="res://assets/models/bad_girl.tscn" id="9_ganq7"]
 [ext_resource type="PackedScene" uid="uid://dwfoyeu4clpn" path="res://scenes/burger_walk.tscn" id="9_tgk1f"]
-
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_6lw4q"]
-panorama = ExtResource("2_kmrjb")
-
-[sub_resource type="Sky" id="Sky_jfxfm"]
-sky_material = SubResource("PanoramaSkyMaterial_6lw4q")
-process_mode = 1
-
-[sub_resource type="Environment" id="Environment_o8ldh"]
-background_mode = 2
-sky = SubResource("Sky_jfxfm")
-sky_rotation = Vector3(0, 3.14159, 0)
 
 [sub_resource type="GDScript" id="GDScript_ay0gv"]
 script/source = "extends AnimatableBody3D
@@ -63,10 +50,77 @@ size = Vector3(5, 0.25, 5)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_wnbck"]
 data = PackedVector3Array(-2.5, 0.125, 2.5, 2.5, 0.125, 2.5, -2.5, -0.125, 2.5, 2.5, 0.125, 2.5, 2.5, -0.125, 2.5, -2.5, -0.125, 2.5, 2.5, 0.125, -2.5, -2.5, 0.125, -2.5, 2.5, -0.125, -2.5, -2.5, 0.125, -2.5, -2.5, -0.125, -2.5, 2.5, -0.125, -2.5, 2.5, 0.125, 2.5, 2.5, 0.125, -2.5, 2.5, -0.125, 2.5, 2.5, 0.125, -2.5, 2.5, -0.125, -2.5, 2.5, -0.125, 2.5, -2.5, 0.125, -2.5, -2.5, 0.125, 2.5, -2.5, -0.125, -2.5, -2.5, 0.125, 2.5, -2.5, -0.125, 2.5, -2.5, -0.125, -2.5, 2.5, 0.125, 2.5, -2.5, 0.125, 2.5, 2.5, 0.125, -2.5, -2.5, 0.125, 2.5, -2.5, 0.125, -2.5, 2.5, 0.125, -2.5, -2.5, -0.125, 2.5, 2.5, -0.125, 2.5, -2.5, -0.125, -2.5, 2.5, -0.125, 2.5, 2.5, -0.125, -2.5, -2.5, -0.125, -2.5)
 
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_6lw4q"]
+panorama = ExtResource("2_kmrjb")
+
+[sub_resource type="Sky" id="Sky_jfxfm"]
+sky_material = SubResource("PanoramaSkyMaterial_6lw4q")
+process_mode = 1
+
+[sub_resource type="Environment" id="Environment_o8ldh"]
+background_mode = 2
+sky = SubResource("Sky_jfxfm")
+sky_rotation = Vector3(0, 3.14159, 0)
+
 [node name="Sandbox" type="Node3D"]
 
-[node name="rabbit" parent="." instance=ExtResource("1_08jda")]
+[node name="misc" type="Node3D" parent="."]
+
+[node name="rabbit" parent="misc" instance=ExtResource("1_08jda")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.15566, -28.1647)
+
+[node name="Dennis1" parent="misc" instance=ExtResource("4_xct7w")]
+transform = Transform3D(-0.815512, 0, 0.57874, 0, 1, 0, -0.57874, 0, -0.815512, -1.67447, 0.0431911, 3.83474)
+
+[node name="Dennis2" parent="misc" instance=ExtResource("4_xct7w")]
+transform = Transform3D(-0.974983, 0, 0.22228, 0, 1, 0, -0.22228, 0, -0.974983, 9.97922, 0.0832737, 11.1987)
+
+[node name="rotate platform" type="AnimatableBody3D" parent="misc"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.30566, 0, -0.214722)
+script = SubResource("GDScript_ay0gv")
+
+[node name="rotate platform" type="MeshInstance3D" parent="misc/rotate platform"]
+process_physics_priority = -1
+material_override = SubResource("StandardMaterial3D_vdib0")
+mesh = SubResource("CylinderMesh_5xpgk")
+skeleton = NodePath("../../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="misc/rotate platform"]
+shape = SubResource("ConcavePolygonShape3D_jgdsp")
+
+[node name="moving platform" type="AnimatableBody3D" parent="misc"]
+script = SubResource("GDScript_aouj7")
+
+[node name="jirate platform" type="MeshInstance3D" parent="misc/moving platform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.4, 0.1, -1.3)
+mesh = SubResource("BoxMesh_up3o0")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="misc/moving platform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.4, 0.1, -1.3)
+shape = SubResource("ConcavePolygonShape3D_wnbck")
+
+[node name="Node3D" type="Node3D" parent="misc"]
+
+[node name="burger_walk" parent="misc/Node3D" instance=ExtResource("9_tgk1f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -43, 0.022, -5.261)
+
+[node name="Bad Girl" type="Node3D" parent="misc"]
+transform = Transform3D(1, 0, 0, 0, 0.989591, -0.143907, 0, 0.143907, 0.989591, 24, 11.5809, -59.3914)
+
+[node name="Bad Girl" parent="misc/Bad Girl" instance=ExtResource("9_ganq7")]
+
+[node name="rotate platform2" type="AnimatableBody3D" parent="misc"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5352, 1.22886, 11.9889)
+
+[node name="rotate platform" type="MeshInstance3D" parent="misc/rotate platform2"]
+process_physics_priority = -1
+material_override = SubResource("StandardMaterial3D_vdib0")
+mesh = SubResource("CylinderMesh_5xpgk")
+skeleton = NodePath("../../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="misc/rotate platform2"]
+shape = SubResource("ConcavePolygonShape3D_jgdsp")
 
 [node name="Player" parent="." instance=ExtResource("1_pxemp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.39019, -0.0195895, 13.4401)
@@ -77,60 +131,4 @@ transform = Transform3D(0.697415, 0.550828, -0.458476, -0.403695, 0.830528, 0.38
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_o8ldh")
 
-[node name="Dennis1" parent="." instance=ExtResource("4_xct7w")]
-transform = Transform3D(-0.815512, 0, 0.57874, 0, 1, 0, -0.57874, 0, -0.815512, -1.67447, 0.0431911, 3.83474)
-
-[node name="Dennis2" parent="." instance=ExtResource("4_xct7w")]
-transform = Transform3D(-0.974983, 0, 0.22228, 0, 1, 0, -0.22228, 0, -0.974983, 9.97922, 0.0832737, 11.1987)
-
 [node name="ChickenTown" parent="." instance=ExtResource("5_2kpfi")]
-
-[node name="rotate platform" type="AnimatableBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 0, -1.5)
-script = SubResource("GDScript_ay0gv")
-
-[node name="rotate platform" type="MeshInstance3D" parent="rotate platform"]
-process_physics_priority = -1
-material_override = SubResource("StandardMaterial3D_vdib0")
-mesh = SubResource("CylinderMesh_5xpgk")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="rotate platform"]
-shape = SubResource("ConcavePolygonShape3D_jgdsp")
-
-[node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
-script = SubResource("GDScript_aouj7")
-
-[node name="jirate platform" type="MeshInstance3D" parent="AnimatableBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.4, 0.1, -1.3)
-mesh = SubResource("BoxMesh_up3o0")
-skeleton = NodePath("")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.4, 0.1, -1.3)
-shape = SubResource("ConcavePolygonShape3D_wnbck")
-
-[node name="SexyAmogus" parent="." instance=ExtResource("7_a8qah")]
-transform = Transform3D(1.2, 0, 0, 0, 0.00186405, -1.2, 0, 1.2, 0.00186405, 2.00618, 47.3463, -53.839)
-
-[node name="Node3D" type="Node3D" parent="."]
-
-[node name="burger_walk" parent="Node3D" instance=ExtResource("9_tgk1f")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -43, 0.022, -5.261)
-
-[node name="Bad Girl" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.989591, -0.143907, 0, 0.143907, 0.989591, 24, 11.5809, -59.3914)
-
-[node name="Bad Girl" parent="Bad Girl" instance=ExtResource("9_ganq7")]
-
-[node name="rotate platform2" type="AnimatableBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5352, 1.22886, 11.9889)
-
-[node name="rotate platform" type="MeshInstance3D" parent="rotate platform2"]
-process_physics_priority = -1
-material_override = SubResource("StandardMaterial3D_vdib0")
-mesh = SubResource("CylinderMesh_5xpgk")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="rotate platform2"]
-shape = SubResource("ConcavePolygonShape3D_jgdsp")
