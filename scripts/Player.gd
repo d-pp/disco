@@ -41,6 +41,9 @@ var hang_timer: float = HANG_TIME + 1
 var crouched: bool = false
 var position_delta: Vector3 = position
 var mantling: bool = false
+var has_mantled: bool = false
+var target_mantle_position: Vector3
+var fps: float = 60.0
 
 @onready var cam: Camera3D = $PlayerCamera
 @onready var head: Node3D = $Head
@@ -54,6 +57,7 @@ var mantling: bool = false
 @onready var ledge_angle_check: ShapeCast3D = $LedgeAngleCheck
 @onready var standing_col: CollisionShape3D = $StandingColliderShape
 @onready var crouching_col: CollisionShape3D = $CrouchingColliderShape
+@onready var debug_ball: MeshInstance3D = $DebugBall
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -64,7 +68,8 @@ func _ready():
 	standing_col.disabled = crouched
 
 func _process(delta):
-	Debug.log("FPS", 1/delta)
+	fps = lerp(fps, 1/delta, 0.3)
+	Debug.log("FPS", round(fps))
 	Debug.log("Vel", velocity.length())
 	Debug.log("Posture", posture)
 	body_view.size = get_viewport().size + Vector2i(2,2) # doesn't render fully otherwise
@@ -130,35 +135,59 @@ func raycast_shit():
 	# ledge check
 	ledge_rays.fire_all()
 	var ledge_ray: RayCast3D = ledge_rays.shortest_ray()
+	if not Input.is_action_pressed("move_jump"):
+		has_mantled = false
 	if ledge_ray != null and RayGroup.angle(ledge_ray) < floor_max_angle:
-		if Input.is_action_pressed("move_jump"):
+		if Input.is_action_pressed("move_jump") and not has_mantled:
 			ledge_angle_check.force_shapecast_update()
 			if ledge_angle_check.get_collision_count() == 0:
 				return
 			# TODO this shouldn't happen instantaneously, instead trigger animation
-			var angle = ledge_angle_check.get_collision_normal(0) * VECTOR3_XZ
-			look_at(position - angle)
+			var ledge_dir = ledge_angle_check.get_collision_normal(0) * VECTOR3_XZ
+			var old_rotation = rotation
+			if not is_zero_approx(ledge_dir.length()):
+				if ledge_dir.angle_to(basis.z) < deg_to_rad(90.0):
+					look_at(position - ledge_dir)
+				else:
+					look_at(position + ledge_dir)
 			ledge_rays.fire_all()
 			ledge_ray = ledge_rays.shortest_ray()
 			if ledge_ray == null or RayGroup.angle(ledge_ray) >= floor_max_angle:
 				return
-			# TODO check if player will fit here
-			position = ledge_ray.get_collision_point() + Vector3.UP * 0.01
-		
-	# curb_rays.look_at(curb_rays.global_position - transform.basis.z)
-	# for ray in curb_rays.get_children():
-	# 	ray.force_raycast_update()
-	# 	if ray.is_colliding():
-	# 		var ledge_height: float = ray.get_collision_point().y - ray.global_position.y + ray.scale.y
-	# 		if ledge_height > LEDGE_HEIGHT - 0.005:
+			var old_position: Vector3 = position
+			crouch()
+			if move_and_collide(Vector3(0,ledge_ray.get_collision_point().y - position.y,0)) == null:
+				for i in range(4):
+					if move_and_collide(0.1 * i * Vector3.UP) != null:
+						break
+					if move_and_collide((ledge_ray.get_collision_point() - position)*VECTOR3_XZ, true) == null:
+						# SUCCESS!!!
+						has_mantled = true
+						target_mantle_position = position * Vector3.UP + ledge_ray.get_collision_point() * VECTOR3_XZ
+						velocity = Vector3.ZERO
+						return
+			position = old_position
+			rotation = old_rotation
+			if not crouched:
+				uncrouch()
 
 func _input(event):
-	if cam.current and event is InputEventMouseMotion and\
-	Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+	if cam.current and event is InputEventMouseMotion\
+	and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * mouse_sensitivity * MOUSE_SENS_MOD)
 		cam_raw_rotation -= event.relative.y * mouse_sensitivity * MOUSE_SENS_MOD
 		cam_raw_rotation = clamp(cam_raw_rotation, -PI*0.42, PI*0.44)
 		cam.rotation.x = cam_raw_rotation
+
+func crouch():
+	crouching_col.disabled = false
+	standing_col.disabled = true
+	head_shape.position.y = crouching_col.shape.height - standing_col.shape.height
+
+func uncrouch():
+	crouching_col.disabled = true
+	standing_col.disabled = false
+	head_shape.position.y = 0.0
 
 func controls(delta):
 	# TODO: remove debug reset
@@ -170,15 +199,11 @@ func controls(delta):
 	if Input.is_action_just_pressed("crouch"):
 		crouched = not crouched
 		if crouched:
-			crouching_col.disabled = false
-			standing_col.disabled = true
-			head_shape.position.y = 0.8 - 1.15
+			crouch()
 	# might still be waiting to stand up
 	if not crouched and standing_col.disabled:
 		if move_and_collide(Vector3.UP * (1.15 - 0.8), true) == null:
-			crouching_col.disabled = true
-			standing_col.disabled = false
-			head_shape.position.y = 0.0
+			uncrouch()
 	# coyote -> wants to jump now and had ground a moment ago
 	# reverse coyote -> has ground now and failed to jump a moment ago
 	grounded = is_on_floor()
@@ -190,8 +215,8 @@ func controls(delta):
 		grounded = true
 	time_since_last_jump += delta
 	# jump
-	if Input.is_action_just_pressed("move_jump") or\
-	grounded and reverse_coyote_timer < REVERSE_COYOTE_TIME:
+	if Input.is_action_just_pressed("move_jump")\
+	or grounded and reverse_coyote_timer < REVERSE_COYOTE_TIME:
 		if grounded:
 			reverse_coyote_timer = REVERSE_COYOTE_TIME + 1
 			coyote_timer = COYOTE_TIME + 1
